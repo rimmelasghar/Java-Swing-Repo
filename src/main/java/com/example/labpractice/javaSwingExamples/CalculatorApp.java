@@ -17,7 +17,7 @@ public class CalculatorApp extends JFrame implements ActionListener {
         // Set up the JFrame
         setTitle("Calculator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+        setResizable(true);
         setLocationRelativeTo(null);
 
         // Create the display field
@@ -118,6 +118,7 @@ public class CalculatorApp extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
+
         SwingUtilities.invokeLater(() -> new CalculatorApp());
     }
 }

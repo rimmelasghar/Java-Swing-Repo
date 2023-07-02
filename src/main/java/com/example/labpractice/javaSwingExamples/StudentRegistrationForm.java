@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Objects;
 
 public class StudentRegistrationForm {
@@ -70,7 +74,22 @@ public class StudentRegistrationForm {
         listPanel.add(new JScrollPane(itemList));
         listPanel.setVisible(true);
 
+        try{
+            Connection connection = DatabaseConnection.getConnection();
+            Statement statement = connection.createStatement();
 
+            String query = "SELECT * FROM students";
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()){
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                boolean status = resultSet.getBoolean("status");
+                listModel.addElement(name);
+
+            }
+        } catch (SQLException ex){
+            ex.printStackTrace();
+        };
         frame.add(imgPanel,BorderLayout.NORTH);
         frame.add(mainPanel,BorderLayout.CENTER);
         frame.add(listPanel,BorderLayout.SOUTH);
@@ -82,9 +101,19 @@ public class StudentRegistrationForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String studentName = usernameEnter.getText();
+                boolean isSelected = feesStatus.isSelected();
                 if(!Objects.equals(studentName, "")) {
-                    listModel.addElement(studentName);
                     usernameEnter.setText("");
+                    try{
+                        Connection connection = DatabaseConnection.getConnection();
+                        Statement statement = connection.createStatement();
+                        String query = String.format("INSERT INTO students (name,status)VALUES('%s',%s)",studentName,isSelected);
+                        int rowsAffected = statement.executeUpdate(query);
+                        System.out.println(rowsAffected + " row(s) inserted successfully.");
+                        listModel.addElement(studentName);
+                    } catch (SQLException ex){
+                        ex.printStackTrace();
+                    };
                 } else {
                     System.out.println("Enter correct name");
                 }
