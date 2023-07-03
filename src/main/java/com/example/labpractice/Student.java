@@ -30,4 +30,8 @@ public class Student {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String displayInformation(){
+        return String.format("Name : %s ,Age : %s ",this.name,this.age);
+    }
 }
